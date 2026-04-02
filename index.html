@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PokéDex Explorer — Esercizio JS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="#" class="logo" aria-label="PokéDex Explorer">
+        <svg class="logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <circle cx="18" cy="18" r="16" stroke="currentColor" stroke-width="2"/>
+          <path d="M2 18h32" stroke="currentColor" stroke-width="2"/>
+          <circle cx="18" cy="18" r="5" fill="var(--color-primary)" stroke="var(--color-surface)" stroke-width="2"/>
+          <path d="M2 18 C2 9.16 9.16 2 18 2" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M34 18 C34 26.84 26.84 34 18 34" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <div class="logo-text">PokéDex</div>
+          <div class="logo-sub">Esercizio JS</div>
+        </div>
+      </a>
+      <button class="theme-toggle" data-theme-toggle aria-label="Cambia tema">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content" id="main">
+
+    <!-- CARD PRINCIPALE -->
+    <div class="card" style="margin-bottom:var(--space-8);">
+      <span class="task-badge dom">🧩 Consegna</span>
+      <h1 class="section-title">PokéDex Explorer</h1>
+      <p class="section-desc">
+        Completa il file <code>script.js</code> per rendere funzionante l'applicazione.
+        Usa <strong>fetch API</strong>, <strong>metodi degli array</strong> e <strong>manipolazione del DOM</strong>.
+        API di riferimento: <code>https://pokeapi.co</code>
+      </p>
+
+      <!-- STATISTICHE -->
+      <div class="stats-bar">
+        <div class="stat-chip">Pokémon caricati: <span id="count-loaded">—</span></div>
+        <div class="stat-chip">Dopo filtro: <span id="count-filtered">—</span></div>
+        <div class="stat-chip">Peso medio: <span id="avg-weight">—</span> kg</div>
+        <div class="stat-chip">Exp media: <span id="avg-exp">—</span></div>
+      </div>
+
+      <!-- CONTROLLI -->
+      <div class="controls-bar">
+        <div class="input-group">
+          <label for="input-search">Cerca per nome</label>
+          <input type="text" id="input-search" placeholder="es. pikachu…" autocomplete="off" />
+        </div>
+        <div class="input-group" style="max-width:180px;">
+          <label for="select-type">Filtra per tipo</label>
+          <select id="select-type">
+            <option value="">Tutti i tipi</option>
+          </select>
+        </div>
+        <div class="input-group" style="max-width:160px;">
+          <label for="select-sort">Ordina per</label>
+          <select id="select-sort">
+            <option value="id">N° Pokédex</option>
+            <option value="name">Nome (A–Z)</option>
+            <option value="weight">Peso</option>
+            <option value="exp">Exp base</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:var(--space-2);align-items:flex-end;">
+          <button class="btn btn-primary" id="btn-load">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Carica Pokémon
+          </button>
+          <button class="btn btn-secondary" id="btn-reset">Reset</button>
+        </div>
+      </div>
+
+      <!-- GRIGLIA -->
+      <div id="pokemon-grid">
+        <div class="state-placeholder" style="grid-column:1/-1;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><circle cx="12" cy="12" r="4"/>
+          </svg>
+          <p>Clicca <strong>"Carica Pokémon"</strong> per iniziare.<br/>
+          Completa la funzione <code>loadPokemon()</code> in script.js.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANNELLO DETTAGLIO (nascosto, reso visibile da JS) -->
+    <div id="detail-panel" role="region" aria-label="Dettaglio Pokémon">
+      <div class="card">
+        <span class="task-badge fetch">🌐 Task Fetch</span>
+        <h2 class="section-title" style="margin-bottom:var(--space-4);">Dettaglio Pokémon</h2>
+        <div class="detail-inner" id="detail-inner">
+          <!-- Popolato da showDetail() in script.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SEZIONE HINTS -->
+    <section style="margin-top:var(--space-12);" aria-label="Suggerimenti">
+      <h2 class="section-title">Cosa devi implementare</h2>
+      <p class="section-desc">Tre aree principali, ognuna copre un concetto chiave del corso.</p>
+
+      <div class="hints-grid">
+
+        <div class="hint-card">
+          <div class="hint-card-header">
+            <span class="hint-num">1</span>
+            <span class="hint-title">Manipolazione del DOM</span>
+          </div>
+          <span class="task-badge dom" style="margin-bottom:var(--space-3);">DOM</span>
+          <div class="hint-body">
+            Crea le card con <code>createElement()</code> e aggiungile con <code>appendChild()</code>.
+            Aggiorna i chip delle statistiche (<code>#count-loaded</code>, <code>#avg-weight</code>, ecc.)
+            dopo ogni operazione. Implementa il pannello di dettaglio con sprite,
+            barre delle stats e abilità.
+          </div>
+        </div>
+
+        <div class="hint-card">
+          <div class="hint-card-header">
+            <span class="hint-num">2</span>
+            <span class="hint-title">Metodi degli Array</span>
+          </div>
+          <span class="task-badge array" style="margin-bottom:var(--space-3);">Array</span>
+          <div class="hint-body">
+            Usa <code>.filter()</code> per ricerca e filtro per tipo.
+            Usa <code>.sort()</code> per ordinare la lista.
+            Usa <code>.map()</code> per trasformare i dati API.
+            Usa <code>.reduce()</code> per calcolare peso medio ed exp media.
+            Estrai i tipi unici con <code>new Set()</code>.
+          </div>
+        </div>
+
+        <div class="hint-card">
+          <div class="hint-card-header">
+            <span class="hint-num">3</span>
+            <span class="hint-title">Chiamate Fetch</span>
+          </div>
+          <span class="task-badge fetch" style="margin-bottom:var(--space-3);">Fetch</span>
+          <div class="hint-body">
+            Chiama <code>https://pokeapi.co/api/v2/pokemon?limit=20</code>.
+            Per ogni Pokémon, esegui il fetch del dettaglio individuale.
+            Usa <code>Promise.all()</code> per parallelizzare.
+            Gestisci gli errori con <code>try/catch</code>.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    Esercizio JavaScript &mdash; dati da
+    <a href="https://pokeapi.co" target="_blank" rel="noopener noreferrer">pokeapi.co</a>
+  </footer>
+</div>
+
+<!-- Dark/Light mode toggle -->
+<script>
+(function(){
+  var t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  var d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);
+  if(t)t.addEventListener('click',function(){
+    d=d==='dark'?'light':'dark';
+    r.setAttribute('data-theme',d);
+    t.innerHTML=d==='dark'
+      ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  });
+})();
+</script>
+
+<!-- Script dello studente — da completare -->
+<script src="script.js"></script>
+</body>
+</html>
