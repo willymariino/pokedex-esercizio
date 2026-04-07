@@ -37,13 +37,13 @@ exercise-js/
 
 ### ✅ Task 1 — Fetch API
 
-- [ ] Chiama `https://pokeapi.co/api/v2/pokemon?limit=20`
+- [X] Chiama `https://pokeapi.co/api/v2/pokemon?limit=20`
       per ottenere la lista dei primi 20 Pokémon
-- [ ] Per ogni Pokémon, esegui un secondo `fetch()` all'URL individuale
+- [X] Per ogni Pokémon, esegui un secondo `fetch()` all'URL individuale
       (campo `.url` di ogni elemento della lista)
-- [ ] Usa `Promise.all()` per eseguire tutte le chiamate in parallelo
-- [ ] Trasforma i dati con `.map()` nella struttura definita nei commenti
-- [ ] Gestisci gli errori con `try/catch`
+- [X] Usa `Promise.all()` per eseguire tutte le chiamate in parallelo
+- [X] Trasforma i dati con `.map()` nella struttura definita nei commenti
+- [X] Gestisci gli errori con `try/catch`
 - [ ] **Bonus**: mostra 20 skeleton loader durante il caricamento
       (elementi con classe `skeleton skeleton-card`)
 

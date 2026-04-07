@@ -5,14 +5,14 @@
 // =============================================
 
 // ── Riferimento elementi del DOM ──────────────
-const grid        = document.getElementById('pokemon-grid');
+const grid = document.getElementById('pokemon-grid');
 const detailPanel = document.getElementById('detail-panel');
 const detailInner = document.getElementById('detail-inner');
 const inputSearch = document.getElementById('input-search');
-const selectType  = document.getElementById('select-type');
-const selectSort  = document.getElementById('select-sort');
-const btnLoad     = document.getElementById('btn-load');
-const btnReset    = document.getElementById('btn-reset');
+const selectType = document.getElementById('select-type');
+const selectSort = document.getElementById('select-sort');
+const btnLoad = document.getElementById('btn-load');
+const btnReset = document.getElementById('btn-reset');
 
 // ── Stato dell'applicazione ───────────────────
 let allPokemon = []; // Array completo caricato dall'API
@@ -29,6 +29,39 @@ async function loadPokemon() {
   // TODO: usa fetch() per chiamare l'endpoint lista:
   //       https://pokeapi.co/api/v2/pokemon?limit=20
   //       converti la risposta con .json() e ottieni l'array .results
+
+  // prendo la lista che contiene solo nomi e url
+  axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20`)
+    .then((res) => {
+      allPokemon = res.data.results // array con solo nomi e url
+
+
+      // console.log(allPokemon)
+
+      // preparo la lista di chiamate scorrendo gli url e mettendoli dentro uno ad uno nell'array axiosGets
+      const axiosGets = [] // array che contiene gli oggetti delle chiamate da fare agli url
+      for (let i = 0; i < allPokemon.length; i++) {
+        axiosGets.push(axios.get(allPokemon[i].url))
+      }
+      //  console.log(axiosGets)
+
+      // chiamo la lista preparata dentro axiosGets chiamata gli url tutti insieme tramite promise.all
+      Promise.all(axiosGets)
+        .then((values) => {
+          //  console.log(values)
+
+          // aggiungo la proprieta details all'array originale con i data presi da values
+          // values è l'array delle risposte della promise
+          for (let i = 0; i < values.length; i++) {
+            allPokemon[i].details = values[i].data
+          }
+          console.log(allPokemon)
+        })
+      // console.log(res)
+    })
+    .catch(err => {
+      console.error("errore nel caricamento dati", err)
+    })
 
   // TODO: per ogni elemento di .results (ha un campo .url),
   //       prepara una chiamata fetch() al dettaglio individuale
@@ -57,12 +90,13 @@ async function loadPokemon() {
   //   in caso di errore, mostra un messaggio nella grid con state-placeholder
 }
 
+
 // =============================================
 // TASK 2 — Metodi degli Array
 // =============================================
 
 function getFilteredAndSorted() {
-  const query   = inputSearch.value.toLowerCase().trim();
+  const query = inputSearch.value.toLowerCase().trim();
   const typeVal = selectType.value;
   const sortVal = selectSort.value;
 
@@ -199,8 +233,8 @@ btnLoad.addEventListener('click', loadPokemon);
 
 btnReset.addEventListener('click', () => {
   inputSearch.value = '';
-  selectType.value  = '';
-  selectSort.value  = 'id';
+  selectType.value = '';
+  selectSort.value = 'id';
   renderPokemon();
 });
 
