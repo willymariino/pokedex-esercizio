@@ -33,17 +33,22 @@ async function loadPokemon() {
   // prendo la lista che contiene solo nomi e url
   axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20`)
     .then((res) => {
-      allPokemon = res.data.results // array con solo nomi e url
-
-
+      const pokemonListWithUrls = res.data.results // array con solo nomi e url
       // console.log(allPokemon)
 
       // preparo la lista di chiamate scorrendo gli url e mettendoli dentro uno ad uno nell'array axiosGets
       const axiosGets = [] // array che contiene gli oggetti delle chiamate da fare agli url
-      for (let i = 0; i < allPokemon.length; i++) {
-        axiosGets.push(axios.get(allPokemon[i].url))
+      for (let i = 0; i < pokemonListWithUrls.length; i++) {
+        axiosGets.push(axios.get(pokemonListWithUrls[i].url))
       }
+
       //  console.log(axiosGets)
+
+      // TODO: per ogni elemento di .results (ha un campo .url),
+      //       prepara una chiamata fetch() al dettaglio individuale
+
+      // TODO: usa Promise.all() per eseguire tutte le chiamate in parallelo
+      //       e attendere tutti i risultati insieme
 
       // chiamo la lista preparata dentro axiosGets chiamata gli url tutti insieme tramite promise.all
       Promise.all(axiosGets)
@@ -53,9 +58,52 @@ async function loadPokemon() {
           // aggiungo la proprieta details all'array originale con i data presi da values
           // values è l'array delle risposte della promise
           for (let i = 0; i < values.length; i++) {
-            allPokemon[i].details = values[i].data
+            pokemonListWithUrls[i].details = values[i].data
           }
+          // console.log(pokemonListWithUrls)
+
+
+          // TODO: con .map() trasforma ogni risposta grezza in un oggetto con questa struttura:
+          //   {
+          //     id:        p.id,
+          //     name:      p.name,
+          //     sprite:    p.sprites.front_default,
+          //     types:     p.types.map(t => t.type.name),        // array di stringhe es. ['fire','flying']
+          //     weight:    p.weight,                              // in decagrammi (÷10 per kg)
+          //     exp:       p.base_experience,                     // può essere null
+          //     abilities: p.abilities.map(a => a.ability.name),
+          //     stats:     p.stats.map(s => ({ name: s.stat.name, value: s.base_stat }))
+          //   }
+
+          // TODO: salva i risultati in allPokemon
+
+          allPokemon = pokemonListWithUrls.map((p) => {
+            const obj = {
+              id: p.details.id,
+              name: p.name,
+              sprite: p.details.sprites.front_default,
+              types: p.details.types.map(t => t.type.name),
+              weight: p.details.weight,
+              exp: p.details.base_experience,
+              abilities: p.details.abilities.map(a => a.ability.name),
+              stats: p.details.stats.map(s => ({ name: s.stat.name, value: s.base_stat }))
+            };
+
+            return obj
+          })
+
           console.log(allPokemon)
+
+          // IMPORTANT: queste funzioni devono essere chiamate SOLO dopo il caricamento dei dati,
+          // perché axios è asincrono. Se chiamate fuori da Promise.all, verrebbero eseguite
+          // prima che allPokemon sia popolato (causando rendering vuoto o incompleto)
+          // in pratica le funzioni di rendering devono essere chiamate solo dopo che i dati async sono disponibili, 
+          // altrimenti si rischia di lavorare su stato vuoto o incompleto
+          // TODO: chiama populateTypeFilter() per popolare la select dei tipi
+          populateTypeFilter()
+          // TODO: chiama renderPokemon() per disegnare le card
+          renderPokemon()
+
         })
       // console.log(res)
     })
@@ -63,28 +111,6 @@ async function loadPokemon() {
       console.error("errore nel caricamento dati", err)
     })
 
-  // TODO: per ogni elemento di .results (ha un campo .url),
-  //       prepara una chiamata fetch() al dettaglio individuale
-
-  // TODO: usa Promise.all() per eseguire tutte le chiamate in parallelo
-  //       e attendere tutti i risultati insieme
-
-  // TODO: con .map() trasforma ogni risposta grezza in un oggetto con questa struttura:
-  //   {
-  //     id:        p.id,
-  //     name:      p.name,
-  //     sprite:    p.sprites.front_default,
-  //     types:     p.types.map(t => t.type.name),        // array di stringhe es. ['fire','flying']
-  //     weight:    p.weight,                              // in decagrammi (÷10 per kg)
-  //     exp:       p.base_experience,                     // può essere null
-  //     abilities: p.abilities.map(a => a.ability.name),
-  //     stats:     p.stats.map(s => ({ name: s.stat.name, value: s.base_stat }))
-  //   }
-
-  // TODO: salva i risultati in allPokemon
-
-  // TODO: chiama populateTypeFilter() per popolare la select dei tipi
-  // TODO: chiama renderPokemon() per disegnare le card
 
   // GESTIONE ERRORI: avvolgi tutto in try/catch
   //   in caso di errore, mostra un messaggio nella grid con state-placeholder
@@ -114,6 +140,7 @@ function getFilteredAndSorted() {
   //       'exp'    → numerico decrescente (b.exp - a.exp), gestisci i null
 
   // TODO: restituisci l'array risultante con return
+  return allPokemon
 }
 
 function updateStats(filtered) {
@@ -157,9 +184,51 @@ function renderPokemon() {
   updateStats(list);
 
   // TODO: svuota la grid: grid.innerHTML = ''
+  grid.innerHTML = ""
 
   // TODO: se list è vuoto, crea e inserisci un div.state-placeholder
   //       con un messaggio "Nessun risultato trovato" e termina la funzione (return)
+  if (list.length === 0) {
+    console.log("lista vuota")
+  }
+  else {
+    list.forEach(element => {
+      // const card = document.createElement("div")
+      // card.classList.add("pokemon-card")
+      // card.innerHTML = `
+      // <div class = "poke-id" > # ${element.id}  </div>
+      // <img src="${element.sprite}" alt="${element.name}"
+      // width  = "80"
+      // height = "80"
+      // loading = "lazy"
+      // >
+      // <div class="poke-name">${element.name}</div>
+      // <div class="poke-types"></div>
+      // `
+      // grid.append(card)
+
+      let tipi = ""
+      element.types.forEach(tipo => {
+        tipi += `<span class="type-badge type-${tipo}" > ${tipo} </span>`
+      })
+
+      grid.innerHTML += `
+      <div class="pokemon-card" > 
+      <div class = "poke-id" > # ${element.id}  </div>
+      <img src="${element.sprite}" alt="${element.name}"
+      width  = "80"
+      height = "80"
+      loading = "lazy"
+      >
+      <div class="poke-name">${element.name}</div>
+      <div class="poke-types">${tipi}</div>
+      </div>
+      `
+
+
+
+    });
+  }
 
   // TODO: per ogni pokemon in list, crea una card con document.createElement('div')
   //       aggiungi la classe CSS "pokemon-card"

@@ -69,8 +69,8 @@ Dentro `populateTypeFilter()`:
 ### ✅ Task 3 — Manipolazione del DOM
 
 Dentro `renderPokemon()`:
-- [ ] Svuota la grid con `grid.innerHTML = ''`
-- [ ] Crea ogni card con `document.createElement()`
+- [X] Svuota la grid con `grid.innerHTML = ''`
+- [X] Crea ogni card con `document.createElement()`
 - [ ] Aggiungi sprite, id formattato (`#001`), nome e badge dei tipi
 - [ ] Aggiungi un listener `click` per aprire il dettaglio
 - [ ] Mostra un messaggio se non ci sono risultati
