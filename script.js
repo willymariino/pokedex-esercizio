@@ -13,6 +13,9 @@ const selectType = document.getElementById('select-type');
 const selectSort = document.getElementById('select-sort');
 const btnLoad = document.getElementById('btn-load');
 const btnReset = document.getElementById('btn-reset');
+const countLoaded = document.getElementById("count-loaded")
+const countFiltered = document.getElementById("count-filtered")
+
 
 // ── Stato dell'applicazione ───────────────────
 let allPokemon = []; // Array completo caricato dall'API
@@ -144,6 +147,23 @@ function getFilteredAndSorted() {
   //       'weight' → numerico crescente (a.weight - b.weight)
   //       'exp'    → numerico decrescente (b.exp - a.exp), gestisci i null
 
+  switch (sortVal) {
+    case "id":
+      filteredPokemons.sort((a, b) => a.id - b.id)
+      break
+    case "name":
+      filteredPokemons.sort((a, b) => a.name.localeCompare(b.name))
+      break
+    case "weigth":
+      filteredPokemons.sort((a, b) => a.weight - b.weight)
+      break
+    case "exp":
+      filteredPokemons.sort((a, b) => b.exp - a.exp)
+      break
+    default:
+
+  }
+
   // TODO: restituisci l'array risultante con return
   return filteredPokemons
 }
@@ -151,13 +171,24 @@ function getFilteredAndSorted() {
 function updateStats(filtered) {
   // TODO: seleziona l'elemento #count-loaded e aggiorna il suo textContent
   //       con allPokemon.length
+  countLoaded.innerHTML = allPokemon.length
 
   // TODO: seleziona l'elemento #count-filtered e aggiorna con filtered.length
+  countFiltered.innerHTML = filtered.length
 
   // TODO: calcola il peso medio in kg usando .reduce() su filtered
   //       (weight è in decagrammi → dividi per 10)
   //       aggiorna l'elemento #avg-weight
   //       se filtered è vuoto, mostra "—"
+  const avgWeigth = document.getElementById("avg-weight")
+  if (filtered.length) {
+    const avg = (filtered.reduce((acc, curr) => acc + curr.weight, 0) / filtered.length) / 10
+    avgWeigth.innerText = avg.toFixed(2)
+  } else {
+    avgWeigth.innerText = "-"
+  }
+
+
 
   // TODO: calcola l'exp media con .reduce() su filtered
   //       alcuni pokemon.exp potrebbero essere null, esclludili dal calcolo
