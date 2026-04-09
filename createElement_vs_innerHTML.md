@@ -179,11 +179,11 @@ grid.innerHTML += `<div class="pokemon-card">...</div>`
 
 ## 3️⃣ Schemino mentale: **quando usare createElement vs innerHTML**
 
-| Situazione / Obiettivo                        | `createElement`                         | `innerHTML`                | ------------------------------------------------|-----------------------------------------|----------------------------|
+| Situazione / Obiettivo                        | `createElement`                        | `innerHTML`                    |
+| --------------------------------------------- | -------------------------------------- | ------------------------------ |
 | Creare elementi dinamici e complessi          | ✅ (nodi veri, append multipli, eventi) | ❌ (meno controllabile)         |
 | Aggiungere contenuto senza riscrivere DOM     | ✅ append                               | ❌ con `+=` riscrive tutto      |
 | Performance loop grande (>10-20 elementi)     | ✅ efficiente                           | ❌ lento, ricrea DOM            |
-| Prototipo veloce / pochi elementi             | ⚠️ più verboso                          | ✅ veloce                       |
+| Prototipo veloce / pochi elementi             | ⚠️ più verboso                         | ✅ veloce                       |
 | Necessità di manipolare o aggiungere listener | ✅ facile                               | ⚠️ rischio di perderli         |
 | Trasformare array in elementi HTML            | ✅ forEach + createElement              | ✅ forEach + string concatenata |
-
