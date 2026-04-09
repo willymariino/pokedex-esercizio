@@ -53,16 +53,16 @@ exercise-js/
 
 Dentro `getFilteredAndSorted()`:
 - [X] `.filter()` — filtra per nome (usa `.includes()`)
-- [ ] `.filter()` — filtra per tipo (se selezionato)
-- [ ] `.sort()`   — ordina per id, nome, peso o exp base
+- [X] `.filter()` — filtra per tipo (se selezionato)
+- [X] `.sort()`   — ordina per id, nome, peso o exp base
 
 Dentro `updateStats(filtered)`:
-- [ ] `.reduce()` — calcola il peso medio in kg
+- [X] `.reduce()` — calcola il peso medio in kg
 - [ ] `.reduce()` — calcola l'exp media (gestisci i valori `null`)
 
 Dentro `populateTypeFilter()`:
-- [ ] `.flatMap()` + `new Set()` — estrai i tipi unici
-- [ ] Crea e aggiungi un `<option>` per ogni tipo alla `<select>`
+- [X] `.flatMap()` + `new Set()` — estrai i tipi unici
+- [X] Crea e aggiungi un `<option>` per ogni tipo alla `<select>`
 
 ---
 
