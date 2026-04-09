@@ -52,7 +52,7 @@ exercise-js/
 ### ✅ Task 2 — Metodi degli Array
 
 Dentro `getFilteredAndSorted()`:
-- [ ] `.filter()` — filtra per nome (usa `.includes()`)
+- [X] `.filter()` — filtra per nome (usa `.includes()`)
 - [ ] `.filter()` — filtra per tipo (se selezionato)
 - [ ] `.sort()`   — ordina per id, nome, peso o exp base
 

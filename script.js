@@ -128,6 +128,7 @@ function getFilteredAndSorted() {
 
   // TODO: parti da allPokemon e applica .filter() per il nome
   //       usa .includes() per controllare se pokemon.name contiene query
+  let filteredPokemons = allPokemon.filter(pokemon => pokemon.name.toLowerCase().includes(query))
 
   // TODO: se typeVal non è vuoto stringa, applica un secondo .filter()
   //       ogni pokemon.types è un array di stringhe
@@ -140,7 +141,7 @@ function getFilteredAndSorted() {
   //       'exp'    → numerico decrescente (b.exp - a.exp), gestisci i null
 
   // TODO: restituisci l'array risultante con return
-  return allPokemon
+  return filteredPokemons
 }
 
 function updateStats(filtered) {
@@ -310,3 +311,6 @@ btnReset.addEventListener('click', () => {
 inputSearch.addEventListener('input', renderPokemon);
 selectType.addEventListener('change', renderPokemon);
 selectSort.addEventListener('change', renderPokemon);
+
+
+
