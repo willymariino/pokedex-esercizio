@@ -133,6 +133,10 @@ function getFilteredAndSorted() {
   // TODO: se typeVal non è vuoto stringa, applica un secondo .filter()
   //       ogni pokemon.types è un array di stringhe
   //       usa .includes(typeVal) per verificare la presenza del tipo
+  if (typeVal) {
+    filteredPokemons = filteredPokemons.filter(pokemon => pokemon.types.includes(typeVal))
+
+  }
 
   // TODO: applica .sort() in base a sortVal:
   //       'id'     → numerico crescente (a.id - b.id)
@@ -165,15 +169,32 @@ function populateTypeFilter() {
   // TODO: estrai tutti i tipi da allPokemon
   //       usa .flatMap(p => p.types) per ottenere un array piatto di stringhe
 
+  //   const listTypes = allPokemon.map(p => p.types)
+  //  console.log("no flat", listTypes)
+
+  const listFlatTypes = allPokemon.flatMap(p => p.types)
+  // console.log("flat", listFlatTypes) uso il flatMap per spianare e farli diventare un array unico
+
   // TODO: ottieni i valori unici con: [...new Set(tipiArray)]
+  const uniqueTypes = [...new Set(listFlatTypes)]
 
   // TODO: ordina i tipi alfabeticamente con .sort()
+
+  uniqueTypes.sort()
 
   // TODO: per ogni tipo, crea un elemento <option>:
   //       option.value = tipo
   //       option.textContent = tipo (con prima lettera maiuscola)
   //       aggiungilo a selectType con appendChild()
   //       (non rimuovere la prima opzione "Tutti i tipi" già presente nell'HTML)
+
+  uniqueTypes.forEach(element => {
+    const listOption = document.createElement("option")
+    listOption.value = element
+    listOption.text = element
+
+    selectType.append(listOption)
+  })
 }
 
 // =============================================
